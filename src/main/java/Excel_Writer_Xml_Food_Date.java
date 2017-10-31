@@ -17,17 +17,18 @@ import java.util.ArrayList;
  */
 public class Excel_Writer_Xml_Food_Date implements Excel_Writer {
 
-    public Excel_Writer_Xml_Food_Date(ArrayList<DTO> list){
+    public Excel_Writer_Xml_Food_Date(ArrayList<DTO> list,int count) throws Exception{
         try{
             System.out.println("Excel_Writer_Xml_Food_Date is running now...");
-            ExcelWrite(list);
+            ExcelWrite(list,count);
         }
         catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public void ExcelWrite(ArrayList<DTO> list){
+    public void ExcelWrite(ArrayList<DTO> list,int number){
+
         Workbook workbook=new XSSFWorkbook();
 
 
@@ -78,12 +79,15 @@ public class Excel_Writer_Xml_Food_Date implements Excel_Writer {
 
         FileOutputStream fos;
         try{
-            fos=new FileOutputStream("/Users/admin/IdeaProjects/JavaCrawler/data/Food_Date.xlsx"); /** <2> */
+            fos=new FileOutputStream("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Date.xlsx"); /** <2> */
             workbook.write(fos);
             fos.close();
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+    public void ExcelWrite(ArrayList<DTO> list){
+
     }
 
 

@@ -5,9 +5,12 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import javax.swing.plaf.synth.Region;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 /**
@@ -46,111 +49,156 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
     public void apiParserSearch(int year) throws Exception {
 
         /** (반드시수정)*/
-        FileInputStream fis=new FileInputStream("/Users/admin/IdeaProjects/JavaCrawler/data/Food_Region_Apt.xls");/** <1> */
-
+        FileInputStream fis=new FileInputStream("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Region_Apt.xls");/** <1> */
+        FileInputStream RegionCode=new FileInputStream("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Region.xls");
         Workbook wbk=new HSSFWorkbook(fis);
+        Workbook Region_wbk=new HSSFWorkbook(RegionCode);
         Sheet sheet = wbk.getSheetAt(0);
+        Sheet Region_sheet= Region_wbk.getSheetAt(0);
         int rowNum=sheet.getPhysicalNumberOfRows();
-        ArrayList<DTO> list=new ArrayList<DTO>();
+        int Region_rowNum=Region_sheet.getPhysicalNumberOfRows();
 
-        for(int i=1;i<rowNum;i++){
+        ArrayList<DTO> list=new ArrayList<DTO>();
+        int numOfEntity=0;
+        int sheetNum=0;
+
+        for(int i=1;i<rowNum;i++){//rowNum
             Row row = sheet.getRow(i);
-            for(int j=1;j<12;j++) {//
-                int month=j;
+            for(int j=1;j<13;j++) {//
+
 
                 URL url = new URL(getURLParam(row.getCell(0).getStringCellValue(), row.getCell(1).getStringCellValue(), String.valueOf(year),String.valueOf(j)));
+                HttpURLConnection conn= (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("Content-type","application/json");
+
                 XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
                 factory.setNamespaceAware(true);
                 XmlPullParser xp = factory.newPullParser();
-                BufferedInputStream bf = new BufferedInputStream(url.openStream());
-                xp.setInput(bf, "utf-8");
 
-                String tag = null;
-                int eventType = xp.getEventType();
-
-
-                 /*각 기능마다 태그들을 달리 설정*/
                 String disYear = null, disMonth=null, disDate=null, disDay=null, disQuantity=null, disQuantityRate=null,
                         disCount=null, disCountRate = null, cityCode = null, citySidoName = null, citySggName = null,
                         aptCode = null, aptName = null;
 
-                while (eventType != XmlPullParser.END_DOCUMENT) {
-                    if (eventType == XmlPullParser.START_TAG) {
-                        tag = xp.getName();
+                /**응답코드에 따른 분류!*/
+                if(conn.getResponseCode()>=400){/*응답 받지 못한경우 발생(4xx: 요청값 오류, 5xx: 내부서버오류)*/
 
-                    } else if (eventType == XmlPullParser.TEXT) {
+                    String ServerError="ServerError";
 
-                        if (tag.equals("disYear")) {
-                            disYear = xp.getText();
-                        }
-                        else if (tag.equals("disMonth")) {
-                            disMonth=xp.getText();
-                        }
-                        else if (tag.equals("disDate")) {
-                            disDate=xp.getText();
-                        }
-                        else if (tag.equals("disDay")) {
-                            disDay=xp.getText();
-                        }
-                        else if (tag.equals("cityCode")) {
-                            cityCode=xp.getText();
-                        }
-                        else if (tag.equals("citySidoName")) {
-                            citySidoName=xp.getText();
-                        }
-                        else if (tag.equals("citySggName")) {
-                            citySggName=xp.getText();
-                        }
-                        else if (tag.equals("aptCode")) {
-                            aptCode=xp.getText();
-                        }
-                        else if (tag.equals("aptName")) {
-                            aptName=xp.getText();
-                        }
-                        else if (tag.equals("disQuantity")) {
-                            disQuantity=xp.getText();
-                        }
-                        else if (tag.equals("disQuantityRate")) {
-                            disQuantityRate=xp.getText();
-                        }
-                        else if (tag.equals("disCount")) {
-                            disCount=xp.getText();
-                        }
-                        else if (tag.equals("disCountRate")) {
-                            disCountRate=xp.getText();
-                        }
+                    DTO entity = new DTO();
 
+                    entity.setDisYear(String.valueOf(year));
+                    entity.setDisMonth(String.valueOf(j));
+                    entity.setDisDate(ServerError);
+                    entity.setDisDay(ServerError);
+                    entity.setCityCode(row.getCell(0).getStringCellValue());
+                    entity.setCitySidoName(ServerError);
+                    entity.setCitySggName(row.getCell(2).getStringCellValue());
+                    entity.setAptCode(row.getCell(1).getStringCellValue());
+                    entity.setAptName(row.getCell(3).getStringCellValue());
+                    entity.setDisQuantity(ServerError);
+                    entity.setDisQuantityRate(ServerError);
+                    entity.setDisCount(ServerError);
+                    entity.setDisCountRate(ServerError);
 
-                    } else if (eventType == XmlPullParser.END_TAG) {
-                        tag = xp.getName();
-                        if (tag.equals("list")) {
-                            DTO entity = new DTO();
-
-                            entity.setDisYear(disYear);
-                            entity.setDisMonth(disMonth);
-                            entity.setDisDate(disDate);
-                            entity.setDisDay(disDay);
-                            entity.setCityCode(cityCode);
-                            entity.setCitySidoName(citySidoName);
-                            entity.setCitySggName(citySggName);
-                            entity.setAptCode(aptCode);
-                            entity.setAptName(aptName);
-                            entity.setDisQuantity(disQuantity);
-                            entity.setDisQuantityRate(disQuantityRate);
-                            entity.setDisCount(disCount);
-                            entity.setDisCountRate(disCountRate);
-
-                            list.add(entity);
-
-
-                        }
-                    }
-                    eventType = xp.next();
+                    list.add(entity);
+                    numOfEntity+=1;
                 }
+
+                else{
+                    BufferedInputStream bf = new BufferedInputStream(url.openStream());
+                    xp.setInput(bf, "utf-8");
+
+                    String tag = null;
+                    int eventType = xp.getEventType();
+
+
+                 /*각 기능마다 태그들을 달리 설정*/
+
+
+                    while (eventType != XmlPullParser.END_DOCUMENT) {
+                        if (eventType == XmlPullParser.START_TAG) {
+                            tag = xp.getName();
+
+                        } else if (eventType == XmlPullParser.TEXT) {
+
+                            if (tag.equals("disYear")) {
+                                disYear = xp.getText();
+                            }
+                            else if (tag.equals("disMonth")) {
+                                disMonth=xp.getText();
+                            }
+                            else if (tag.equals("disDate")) {
+                                disDate=xp.getText();
+                            }
+                            else if (tag.equals("disDay")) {
+                                disDay=xp.getText();
+                            }
+                            else if (tag.equals("cityCode")) {
+                                cityCode=xp.getText();
+                            }
+                            else if (tag.equals("citySidoName")) {
+                                citySidoName=xp.getText();
+                            }
+                            else if (tag.equals("citySggName")) {
+                                citySggName=xp.getText();
+                            }
+                            else if (tag.equals("aptCode")) {
+                                aptCode=xp.getText();
+                            }
+                            else if (tag.equals("aptName")) {
+                                aptName=xp.getText();
+                            }
+                            else if (tag.equals("disQuantity")) {
+                                disQuantity=xp.getText();
+                            }
+                            else if (tag.equals("disQuantityRate")) {
+                                disQuantityRate=xp.getText();
+                            }
+                            else if (tag.equals("disCount")) {
+                                disCount=xp.getText();
+                            }
+                            else if (tag.equals("disCountRate")) {
+                                disCountRate=xp.getText();
+                            }
+
+
+                        } else if (eventType == XmlPullParser.END_TAG) {
+                            tag = xp.getName();
+                            if (tag.equals("list")) {
+                                DTO entity = new DTO();
+
+                                entity.setDisYear(disYear);
+                                entity.setDisMonth(disMonth);
+                                entity.setDisDate(disDate);
+                                entity.setDisDay(disDay);
+                                entity.setCityCode(cityCode);
+                                entity.setCitySidoName(citySidoName);
+                                entity.setCitySggName(citySggName);
+                                entity.setAptCode(aptCode);
+                                entity.setAptName(aptName);
+                                entity.setDisQuantity(disQuantity);
+                                entity.setDisQuantityRate(disQuantityRate);
+                                entity.setDisCount(disCount);
+                                entity.setDisCountRate(disCountRate);
+
+                                list.add(entity);
+                                numOfEntity+=1;
+
+
+                            }
+                        }
+                        eventType = xp.next();
+                    }
+                }
+
+
             }
+
         }
-        //printList(list);
-        new Excel_Writer_Xml_Food_Date(list);
+
+
+        new Csv_Writer_Xml_Food_Date().Csv_Writer_Xml_Food_Date(list);
     }
 
 

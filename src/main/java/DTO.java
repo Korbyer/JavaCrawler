@@ -11,9 +11,110 @@ import lombok.Setter;
  */
 
 public class DTO {
-    private @Getter @Setter String cityCode,citySidoName,citySggName,aptCode,aptName,disYear,
+    private String cityCode,citySidoName,citySggName,aptCode,aptName,disYear,
             disMonth,disDate,disDay,disQuantity,disQuantityRate,disCount,disCountRate;
 
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
+    }
 
+    public void setCitySidoName(String citySidoName) {
+        this.citySidoName = citySidoName;
+    }
 
+    public void setCitySggName(String citySggName) {
+        this.citySggName = citySggName;
+    }
+
+    public void setAptCode(String aptCode) {
+        this.aptCode = aptCode;
+    }
+
+    public void setAptName(String aptName) {
+        this.aptName = aptName;
+    }
+
+    public void setDisYear(String disYear) {
+        this.disYear = disYear;
+    }
+
+    public void setDisMonth(String disMonth) {
+        this.disMonth = disMonth;
+    }
+
+    public void setDisDate(String disDate) {
+        this.disDate = disDate;
+    }
+
+    public void setDisDay(String disDay) {
+        this.disDay = disDay;
+    }
+
+    public void setDisQuantity(String disQuantity) {
+        this.disQuantity = disQuantity;
+    }
+
+    public void setDisQuantityRate(String disQuantityRate) {
+        this.disQuantityRate = disQuantityRate;
+    }
+
+    public void setDisCount(String disCount) {
+        this.disCount = disCount;
+    }
+
+    public void setDisCountRate(String disCountRate) {
+        this.disCountRate = disCountRate;
+    }
+
+    public String getCitySidoName() {
+        return citySidoName;
+    }
+
+    public String getCitySggName() {
+        return citySggName;
+    }
+
+    public String getAptCode() {
+        return aptCode;
+    }
+
+    public String getAptName() {
+        return aptName;
+    }
+
+    public String getDisYear() {
+        return disYear;
+    }
+
+    public String getDisMonth() {
+        return disMonth;
+    }
+
+    public String getDisDate() {
+        return disDate;
+    }
+
+    public String getDisDay() {
+        return disDay;
+    }
+
+    public String getDisQuantity() {
+        return disQuantity;
+    }
+
+    public String getDisQuantityRate() {
+        return disQuantityRate;
+    }
+
+    public String getDisCount() {
+        return disCount;
+    }
+
+    public String getDisCountRate() {
+        return disCountRate;
+    }
+
+    public String getCityCode() {
+        return cityCode;
+    }
 }

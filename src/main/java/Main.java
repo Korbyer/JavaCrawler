@@ -33,7 +33,7 @@ public class Main {
     public static void main(String[] args){
         //new Xml_Parser_Region();//지역코드파싱 성공
         //new Xml_Parser_Region_Apt();//아파트리스트파싱 성공
-        new Xml_Parser_Food_Date(2015); /**반드시 수정*/
+        new Xml_Parser_Food_Date(2016); /**반드시 수정*/
 
 
 
