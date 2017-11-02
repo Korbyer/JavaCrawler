@@ -1,11 +1,9 @@
 import au.com.bytecode.opencsv.CSVWriter;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVPrinter;
+
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class Csv_Writer_Xml_Food_Date implements Csv_Writer{
     public void Csv_Writer_Xml_Food_Date(ArrayList<DTO> list) {

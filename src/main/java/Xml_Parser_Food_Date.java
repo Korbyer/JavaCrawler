@@ -5,7 +5,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import javax.swing.plaf.synth.Region;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.net.HttpURLConnection;
