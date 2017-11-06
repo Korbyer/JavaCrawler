@@ -9,7 +9,6 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 
 /**
@@ -45,66 +44,48 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
      * 6. 파싱된 데이터들을 정제합니다.
      * 7. 정제된 데이터들은 ArrayList 형식으로 만들어줍니다. 타입은 DTO 입니다.
      * 8. 정제된 데이터(list 변수) 를 엑셀 메소드의 변수로 넣어주어 실행시킵니다.*/
-    public void apiParserSearch(int year) throws Exception {
 
-        /** (반드시수정)*/
-        FileInputStream fis=new FileInputStream("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Region_Apt.xls");/** <1> */
-        FileInputStream RegionCode=new FileInputStream("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Region.xls");
+    public ArrayList<DTO> returnList(int year) throws Exception{
+        FileInputStream fis=new FileInputStream("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Region_Apt.xls");/** Food_Region_Apt 엑셀파일 저장위치 불러오기 */
+        FileInputStream RegionCode=new FileInputStream("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Region.xls"); /** Food_Region 엑셀파일 저장위치 불러오기*/
         Workbook wbk=new HSSFWorkbook(fis);
         Workbook Region_wbk=new HSSFWorkbook(RegionCode);
         Sheet sheet = wbk.getSheetAt(0);
         Sheet Region_sheet= Region_wbk.getSheetAt(0);
         int rowNum=sheet.getPhysicalNumberOfRows();
         int Region_rowNum=Region_sheet.getPhysicalNumberOfRows();
-
         ArrayList<DTO> list=new ArrayList<DTO>();
+
+        String disYear = null, disMonth = null, disDate = null, disDay = null, disQuantity = null, disQuantityRate = null,
+                disCount = null, disCountRate = null, cityCode = null, citySidoName = null, citySggName = null,
+                aptCode = null, aptName = null, errMsg=null, returnAuthMsg=null, returnReasonCode=null, count=null;
+
         int numOfEntity=0;
         int sheetNum=0;
+        URL url=null;
+        HttpURLConnection conn=null;
+        String ServerError = "ServerError";
+        String NoData="NoData";
+        int TIME_OUT_VALUE=5000;
 
-        for(int i=1;i<rowNum;i++){//rowNum
+
+        for(int i=1;i<rowNum;i++) {//rowNum
             Row row = sheet.getRow(i);
-            for(int j=1;j<13;j++) {//
+            for (int j = 1; j < 13; j++) {//
+                try {
 
 
-                URL url = new URL(getURLParam(row.getCell(0).getStringCellValue(), row.getCell(1).getStringCellValue(), String.valueOf(year),String.valueOf(j)));
-                HttpURLConnection conn= (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("Content-type","application/json");
+                    url = new URL(getURLParam(row.getCell(0).getStringCellValue(), row.getCell(1).getStringCellValue(), String.valueOf(year), String.valueOf(j)));
+                    conn = (HttpURLConnection) url.openConnection();
+                    conn.setConnectTimeout(TIME_OUT_VALUE);
+                    conn.setReadTimeout(TIME_OUT_VALUE);
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Content-type", "application/json");
 
-                XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-                factory.setNamespaceAware(true);
-                XmlPullParser xp = factory.newPullParser();
+                    XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+                    factory.setNamespaceAware(true);
+                    XmlPullParser xp = factory.newPullParser();
 
-                String disYear = null, disMonth=null, disDate=null, disDay=null, disQuantity=null, disQuantityRate=null,
-                        disCount=null, disCountRate = null, cityCode = null, citySidoName = null, citySggName = null,
-                        aptCode = null, aptName = null;
-
-                /**응답코드에 따른 분류!*/
-                if(conn.getResponseCode()>=400){/*응답 받지 못한경우 발생(4xx: 요청값 오류, 5xx: 내부서버오류)*/
-
-                    String ServerError="ServerError";
-
-                    DTO entity = new DTO();
-
-                    entity.setDisYear(String.valueOf(year));
-                    entity.setDisMonth(String.valueOf(j));
-                    entity.setDisDate(ServerError);
-                    entity.setDisDay(ServerError);
-                    entity.setCityCode(row.getCell(0).getStringCellValue());
-                    entity.setCitySidoName(ServerError);
-                    entity.setCitySggName(row.getCell(2).getStringCellValue());
-                    entity.setAptCode(row.getCell(1).getStringCellValue());
-                    entity.setAptName(row.getCell(3).getStringCellValue());
-                    entity.setDisQuantity(ServerError);
-                    entity.setDisQuantityRate(ServerError);
-                    entity.setDisCount(ServerError);
-                    entity.setDisCountRate(ServerError);
-
-                    list.add(entity);
-                    numOfEntity+=1;
-                }
-
-                else{
                     BufferedInputStream bf = new BufferedInputStream(url.openStream());
                     xp.setInput(bf, "utf-8");
 
@@ -160,6 +141,19 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
                             else if (tag.equals("disCountRate")) {
                                 disCountRate=xp.getText();
                             }
+                            else if (tag.equals("errMsg")){
+                                errMsg=xp.getText();
+                            }
+                            else if (tag.equals("returnAuthMsg")){
+                                returnAuthMsg=xp.getText();
+                            }
+                            else if (tag.equals("returnReasonCode")){
+                                returnReasonCode=xp.getText();
+                            }
+                            else if (tag.equals("count")){
+                                count=xp.getText();
+                            }
+
 
 
                         } else if (eventType == XmlPullParser.END_TAG) {
@@ -186,23 +180,96 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
 
 
                             }
+                            else if(tag.equals("returnReasonCode")){
+                                DTO entity = new DTO();
+
+                                entity.setDisYear(String.valueOf(year));
+                                entity.setDisMonth(String.valueOf(j));
+                                entity.setDisDate(ServerError);
+                                entity.setDisDay(ServerError);
+                                entity.setCityCode(row.getCell(0).getStringCellValue());
+                                entity.setCitySidoName(ServerError);
+                                entity.setCitySggName(row.getCell(2).getStringCellValue());
+                                entity.setAptCode(row.getCell(1).getStringCellValue());
+                                entity.setAptName(row.getCell(3).getStringCellValue());
+                                entity.setDisQuantity(ServerError);
+                                entity.setDisQuantityRate(ServerError);
+                                entity.setDisCount(ServerError);
+                                entity.setDisCountRate(ServerError);
+
+                                list.add(entity);
+                                numOfEntity += 1;
+
+                            }
+                            else if(tag.equals("count")){
+
+                                if(Integer.parseInt(count)==0) {
+                                    DTO entity = new DTO();
+
+                                    entity.setDisYear(String.valueOf(year));
+                                    entity.setDisMonth(String.valueOf(j));
+                                    entity.setDisDate(NoData);
+                                    entity.setDisDay(NoData);
+                                    entity.setCityCode(row.getCell(0).getStringCellValue());
+                                    entity.setCitySidoName(NoData);
+                                    entity.setCitySggName(row.getCell(2).getStringCellValue());
+                                    entity.setAptCode(row.getCell(1).getStringCellValue());
+                                    entity.setAptName(row.getCell(3).getStringCellValue());
+                                    entity.setDisQuantity("0");
+                                    entity.setDisQuantityRate("0");
+                                    entity.setDisCount("0");
+                                    entity.setDisCountRate("0");
+
+                                    list.add(entity);
+                                    numOfEntity += 1;
+                                }
+                            }
                         }
                         eventType = xp.next();
                     }
+
+
+                } catch (Exception e) {
+                    System.out.println(i+"번째 "+j+"월 데이터 오류발생, HTTP코드 = "+e.getMessage());
+
+
+                    DTO entity = new DTO();
+
+                    entity.setDisYear(String.valueOf(year));
+                    entity.setDisMonth(String.valueOf(j));
+                    entity.setDisDate(ServerError);
+                    entity.setDisDay(ServerError);
+                    entity.setCityCode(row.getCell(0).getStringCellValue());
+                    entity.setCitySidoName(ServerError);
+                    entity.setCitySggName(row.getCell(2).getStringCellValue());
+                    entity.setAptCode(row.getCell(1).getStringCellValue());
+                    entity.setAptName(row.getCell(3).getStringCellValue());
+                    entity.setDisQuantity(ServerError);
+                    entity.setDisQuantityRate(ServerError);
+                    entity.setDisCount(ServerError);
+                    entity.setDisCountRate(ServerError);
+
+                    list.add(entity);
+                    numOfEntity += 1;
+                } finally {
+
+                    conn.disconnect();
+                    fis.close();
+                    RegionCode.close();
+
                 }
-
-
             }
-
         }
+        return list;
+    }
+    public void apiParserSearch(int year) throws Exception {
+        new Csv_Writer_Xml_Food_Date().Csv_Writer_Xml_Food_Date(returnList(year),year);
 
-
-        new Csv_Writer_Xml_Food_Date().Csv_Writer_Xml_Food_Date(list);
     }
 
 
     public String getURLParam(String cityCode,String aptCode,String year,String month) {
-        String url=PHARAM_URL+METHOD_GET_Food_Date+KEY+ROF_BIG+FOOD_YEAR+year+FOOD_MONTH;
+        String url=PHARAM_URL+METHOD_GET_Food_Date+KEY+ROF+FOOD_YEAR+year+FOOD_MONTH;
         if(Integer.parseInt(month)<10 && cityCode!=null && aptCode!=null){
             url=url+"0"+month+CITY_CODE+cityCode+APT_CODE+aptCode;
         }
@@ -222,5 +289,12 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
 
     public String getURLParam(String data){
         return null;
+    }
+
+    public int returnRowNum(){
+        return 0;
+    }
+    public int returnRowNum(int year){
+        return 0;
     }
 }

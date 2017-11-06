@@ -6,20 +6,20 @@ import java.util.ArrayList;
 
 
 public class Csv_Writer_Xml_Food_Date implements Csv_Writer{
-    public void Csv_Writer_Xml_Food_Date(ArrayList<DTO> list) {
+    public void Csv_Writer_Xml_Food_Date(ArrayList<DTO> list,int year) {
         try{
             System.out.println("Csv_Writer is Running Now...");
-            Csv_Writer(list);
+            Csv_Writer(list,year);
         }
         catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public void Csv_Writer(ArrayList<DTO> list) {
+    public void Csv_Writer(ArrayList<DTO> list,int year) {
 
         try {
-            CSVWriter csvWriter=new CSVWriter(new OutputStreamWriter(new FileOutputStream("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Date.csv"),"EUC-KR"),',','"');
+            CSVWriter csvWriter=new CSVWriter(new OutputStreamWriter(new FileOutputStream("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Date_"+String.valueOf(year)+".csv"),"EUC-KR"),',','"');
             csvWriter.writeNext(new String[]{"disYear","disMonth","disDate","disDay","cityCode","citySidoName","citySggName","aptCode","aptName","disQuantity","disQuantityRate","disCount","disCountRate"});
             try{
                 for(DTO entity : list){
