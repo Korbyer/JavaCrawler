@@ -12,5 +12,6 @@ public interface Json_Parser {
     public final static String ROF="&type=json&page=1&rowNum=10000&citySidoName=서울";
 
     public void apiParserSearch() throws Exception;
+    public String readURLParam() throws Exception;
     public String getURLParam();
 }

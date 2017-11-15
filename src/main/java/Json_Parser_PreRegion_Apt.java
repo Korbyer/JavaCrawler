@@ -13,6 +13,10 @@ public class Json_Parser_PreRegion_Apt implements Json_Parser {
 
     }
 
+    public String readURLParam() throws Exception {
+        return null;
+    }
+
     public String getURLParam() {
         return null;
     }
