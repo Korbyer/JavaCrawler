@@ -99,6 +99,10 @@ public class Xml_Parser_Region_Apt implements Xml_Parser {
         fis.close();
     }
 
+    public ArrayList<DTO> returnList(int year) throws Exception {
+        return null;
+    }
+
     public String getURLParam(String data) {
         String url=PHARAM_URL+METHOD_GET_APT+KEY+ROF+CITY_CODE;
         if(data!=null){

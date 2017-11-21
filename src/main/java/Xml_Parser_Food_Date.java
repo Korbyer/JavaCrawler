@@ -5,8 +5,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -69,10 +68,14 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
         int TIME_OUT_VALUE=5000;
 
 
+
+
+
         for(int i=1;i<rowNum;i++) {//rowNum
             Row row = sheet.getRow(i);
             for (int j = 1; j < 13; j++) {//
-                try {
+                try
+                {
 
 
                     url = new URL(getURLParam(row.getCell(0).getStringCellValue(), row.getCell(1).getStringCellValue(), String.valueOf(year), String.valueOf(j)));

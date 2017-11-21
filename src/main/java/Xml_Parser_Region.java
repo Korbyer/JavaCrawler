@@ -91,7 +91,11 @@ public class Xml_Parser_Region implements Xml_Parser {
 
         }
 
-        public void printList(ArrayList<DTO> list) {
+    public ArrayList<DTO> returnList(int year) throws Exception {
+        return null;
+    }
+
+    public void printList(ArrayList<DTO> list) {
             for(DTO entity:list){
                 System.out.println(entity);
             }

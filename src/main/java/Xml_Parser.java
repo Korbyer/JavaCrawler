@@ -30,6 +30,7 @@ public interface Xml_Parser {
     public String getURLParam(String data);
     public void printList(ArrayList<DTO> list);
     public void apiParserSearch() throws Exception;
+    public ArrayList<DTO> returnList(int year) throws Exception;
 
 
 }
