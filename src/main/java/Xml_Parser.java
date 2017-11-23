@@ -13,9 +13,12 @@ import java.util.ArrayList;
 
 public interface Xml_Parser {
     public final static String PHARAM_URL="http://apis.data.go.kr/B552584/RfidFoodWasteService/"; /** 음식물 API URL */
+    public final static String PHARAM_URL_REGION="http://apis.data.go.kr/1611000/AptListService/getLegaldongAptList?loadCode=";
+    public final static String PHARAM_URL_APT_INFO="http://apis.data.go.kr/1611000/AptBasisInfoService/getAphusBassInfo?kaptCode=";
     public final static String METHOD_GET_CITY="getCityList?ServiceKey="; /** 지자체목록 수집 method*/
     public final static String METHOD_GET_APT="getAptlist?ServiceKey="; /** 아파트목록 수집 method*/
     public final static String METHOD_GET_Food_Date="getCityAptDateList?ServiceKey="; /** 일일 아파트쓰레기목록 수집 method*/
+    public final static String PRE_KEY="&ServiceKey=";
     public final static String KEY="RtnuC6jy0Rc0DC281%2FTcmhwC7oWiLMxk%2BRbFGIDTYnZyQz0vYN3g5N8kvqaPmTVOyMSScRrCXFvpFn1NunWXlg%3D%3D"; /**API 키*/
     public final static String ROF="&type=xml&page=1&rowNum=50"; /**데이터갯수(너무많으면 시간오래걸림)*/
     public final static String ROF_BIG="&type=xml&page=1&rowNum=2000"; /**데이터갯수설정(아파트목록전용)*/
