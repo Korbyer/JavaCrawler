@@ -45,19 +45,14 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
      * 8. 정제된 데이터(list 변수) 를 엑셀 메소드의 변수로 넣어주어 실행시킵니다.*/
 
     public ArrayList<DTO> returnList(int year) throws Exception{
-        FileInputStream fis=new FileInputStream("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Region_Apt.xls");/** Food_Region_Apt 엑셀파일 저장위치 불러오기 */
-        FileInputStream RegionCode=new FileInputStream("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Region.xls"); /** Food_Region 엑셀파일 저장위치 불러오기*/
+        FileInputStream fis=new FileInputStream("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Region_Apt_Dong.xls");/** Food_Region_Apt 엑셀파일 저장위치 불러오기 */
         Workbook wbk=new HSSFWorkbook(fis);
-        Workbook Region_wbk=new HSSFWorkbook(RegionCode);
         Sheet sheet = wbk.getSheetAt(0);
-        Sheet Region_sheet= Region_wbk.getSheetAt(0);
         int rowNum=sheet.getPhysicalNumberOfRows();
-        int Region_rowNum=Region_sheet.getPhysicalNumberOfRows();
         ArrayList<DTO> list=new ArrayList<DTO>();
-
         String disYear = null, disMonth = null, disDate = null, disDay = null, disQuantity = null, disQuantityRate = null,
                 disCount = null, disCountRate = null, cityCode = null, citySidoName = null, citySggName = null,
-                aptCode = null, aptName = null, errMsg=null, returnAuthMsg=null, returnReasonCode=null, count=null;
+                aptCode = null, aptName = null, errMsg=null, returnAuthMsg=null, returnReasonCode=null, count=null,dongName=null;
 
         int numOfEntity=0;
         int sheetNum=0;
@@ -177,6 +172,7 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
                                 entity.setDisQuantityRate(disQuantityRate);
                                 entity.setDisCount(disCount);
                                 entity.setDisCountRate(disCountRate);
+                                entity.setDongName(row.getCell(4).getStringCellValue());
 
                                 list.add(entity);
                                 numOfEntity+=1;
@@ -199,6 +195,7 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
                                 entity.setDisQuantityRate(ServerError);
                                 entity.setDisCount(ServerError);
                                 entity.setDisCountRate(ServerError);
+                                entity.setDongName(row.getCell(4).getStringCellValue());
 
                                 list.add(entity);
                                 numOfEntity += 1;
@@ -222,6 +219,7 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
                                     entity.setDisQuantityRate("0");
                                     entity.setDisCount("0");
                                     entity.setDisCountRate("0");
+                                    entity.setDongName(row.getCell(4).getStringCellValue());
 
                                     list.add(entity);
                                     numOfEntity += 1;
@@ -251,6 +249,7 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
                     entity.setDisQuantityRate(ServerError);
                     entity.setDisCount(ServerError);
                     entity.setDisCountRate(ServerError);
+                    entity.setDongName(row.getCell(4).getStringCellValue());
 
                     list.add(entity);
                     numOfEntity += 1;
@@ -258,7 +257,6 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
 
                     conn.disconnect();
                     fis.close();
-                    RegionCode.close();
 
                 }
             }

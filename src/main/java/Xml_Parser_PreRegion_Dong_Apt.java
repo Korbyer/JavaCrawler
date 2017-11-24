@@ -48,6 +48,10 @@ public class Xml_Parser_PreRegion_Dong_Apt implements Xml_Parser {
             Row row = sheet.getRow(i);
 
             checkAptName=row.getCell(3).getStringCellValue();
+            /**해당 전처리 부분은 있어도되곡 없어도 되는부분입니다.
+             * 바로 밑에 예외처리부분에서 이 모든것을 한번에 해결해줍니다.
+             * 시간단축이 될 수 있을지는 모르지만 후일 용량문제를 고려해보았을때
+             * 해당 부분은 지우셔도 됩니다.*/
             if(checkAptName.contains("다세대")){
                 checkAptName=checkAptName.replaceAll("다세대","");
                 if(checkAptName.contains("(")){
@@ -96,6 +100,7 @@ public class Xml_Parser_PreRegion_Dong_Apt implements Xml_Parser {
             int event_type = xpp.getEventType();
 
             String jibunAddr = null, siNm = null, sggNm = null, emdNm = null,totalCount=null;
+            int sub=1;
 
 
             while (event_type != xpp.END_DOCUMENT) {
@@ -107,51 +112,50 @@ public class Xml_Parser_PreRegion_Dong_Apt implements Xml_Parser {
 
                     if (tag.equals("jibunAddr")) {
                         jibunAddr = xpp.getText();
-                    } else if (tag.equals("siNm")) {
+                    }
+                    else if (tag.equals("siNm")) {
                         siNm = xpp.getText();
-                    } else if (tag.equals("sggNm")) {
+                    }
+                    else if (tag.equals("sggNm")) {
                         sggNm = xpp.getText();
-                    } else if (tag.equals("emdNm")) {
+                    }
+                    else if (tag.equals("emdNm")) {
                         emdNm = xpp.getText();
-                    }else if(tag.equals("totalCount")){
+                    }
+                    else if(tag.equals("totalCount")){
                         totalCount=xpp.getText();
                     }
 
                 } else if (event_type == xpp.END_TAG) {
-                    tag = xpp.getName();
-                    if (tag.equals("juso")) {
-
-                        DTO entity = new DTO();
-
-                        entity.setCityCode(row.getCell(0).getStringCellValue());
-                        entity.setAptCode(row.getCell(1).getStringCellValue());
-                        entity.setCitySggName(row.getCell(2).getStringCellValue());
-                        entity.setAptName(row.getCell(3).getStringCellValue());
-                        entity.setJibunAddr(jibunAddr);
-                        entity.setSiNm(siNm);
-                        entity.setSggNm(sggNm);
-                        entity.setEmdNm(emdNm);
-                        list.add(entity);
+                    if(Integer.parseInt(totalCount)==0){
+                        /**가장 중요한부분
+                         * 주소 api를 이용해서 주소를 입력하였을 때,
+                         * 절대 값이 없이나오지는 않는 특성을 고려
+                         * 결과가 나오지 않으면 해당 아파트 이름 한글자씩을 빼서 다시 url로 돌림*/
+                        url=new URL(getURLParam(row.getCell(2).getStringCellValue(),checkAptName.substring(0,checkAptName.length()-sub)));
+                        sub++;
+                        bis=new BufferedInputStream(url.openStream());
+                        xpp.setInput(bis,"utf-8");
                     }
+                    else{
+                        tag = xpp.getName();
+                        if (tag.equals("juso")) {
 
-                    else if(tag.equals("totalCount")){
-                        if(Integer.parseInt(totalCount)==0) {
-
-                            System.out.println(row.getCell(3).getStringCellValue() + " 해당 주소 오류!");
                             DTO entity = new DTO();
+
                             entity.setCityCode(row.getCell(0).getStringCellValue());
                             entity.setAptCode(row.getCell(1).getStringCellValue());
                             entity.setCitySggName(row.getCell(2).getStringCellValue());
                             entity.setAptName(row.getCell(3).getStringCellValue());
-                            entity.setJibunAddr(error);
-                            entity.setSiNm(error);
-                            entity.setSggNm(error);
-                            entity.setEmdNm(error);
-
+                            entity.setJibunAddr(jibunAddr);
+                            entity.setSiNm(siNm);
+                            entity.setSggNm(sggNm);
+                            entity.setEmdNm(emdNm);
                             list.add(entity);
                         }
 
                     }
+
 
 
                 }

@@ -20,11 +20,11 @@ public class Csv_Writer_Xml_Food_Date implements Csv_Writer{
 
         try {
             CSVWriter csvWriter=new CSVWriter(new OutputStreamWriter(new FileOutputStream("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Date_"+String.valueOf(year)+".csv"),"EUC-KR"),',','"');
-            csvWriter.writeNext(new String[]{"disYear","disMonth","disDate","disDay","cityCode","citySidoName","citySggName","aptCode","aptName","disQuantity","disQuantityRate","disCount","disCountRate"});
+            csvWriter.writeNext(new String[]{"disYear","disMonth","disDate","disDay","cityCode","citySidoName","citySggName","aptCode","aptName","disQuantity","disQuantityRate","disCount","disCountRate","dongName"});
             try{
                 for(DTO entity : list){
                     csvWriter.writeNext(new String[]{entity.getDisYear(),entity.getDisMonth(),entity.getDisDate(),entity.getDisDay(),entity.getCityCode(),
-                            entity.getCitySidoName(),entity.getCitySggName(),entity.getAptCode(),entity.getAptName(),entity.getDisQuantity(),entity.getDisQuantityRate(),entity.getDisCount(),entity.getDisCountRate()});
+                            entity.getCitySidoName(),entity.getCitySggName(),entity.getAptCode(),entity.getAptName(),entity.getDisQuantity(),entity.getDisQuantityRate(),entity.getDisCount(),entity.getDisCountRate(),entity.getDongName()});
                 }
             }
             catch (Exception e){

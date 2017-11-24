@@ -34,10 +34,11 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
 
         String disYear = null, disMonth = null, disDate = null, disDay = null, disQuantity = null, disQuantityRate = null,
                 disCount = null, disCountRate = null, cityCode = null, citySidoName = null, citySggName = null,
-                aptCode = null, aptName = null, errMsg=null, returnAuthMsg=null, returnReasonCode=null, count=null;
+                aptCode = null, aptName = null, errMsg=null, returnAuthMsg=null, returnReasonCode=null, count=null,dongName=null;
 //        for(input=buffReader.readLine();input!=null;i++){
         for(i=1;i<csvBody.size();i++){
             errorCheck = csvBody.get(i)[2];
+            dongName=csvBody.get(i)[13];
             if(errorCheck.equals(ServerError)){
                 try{
                     url = new URL(getURLParam(csvBody.get(i)[4],csvBody.get(i)[7],csvBody.get(i)[0],csvBody.get(i)[1]));
@@ -131,6 +132,7 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
                                 entity.setDisQuantityRate(disQuantityRate);
                                 entity.setDisCount(disCount);
                                 entity.setDisCountRate(disCountRate);
+                                entity.setDongName(dongName);
 
                                 list.add(entity);
                                 numOfEntity+=1;
@@ -153,6 +155,7 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
                                 entity.setDisQuantityRate(ServerError);
                                 entity.setDisCount(ServerError);
                                 entity.setDisCountRate(ServerError);
+                                entity.setDongName(dongName);
 
                                 list.add(entity);
                                 numOfEntity += 1;
@@ -176,6 +179,7 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
                                     entity.setDisQuantityRate("0");
                                     entity.setDisCount("0");
                                     entity.setDisCountRate("0");
+                                    entity.setDongName(dongName);
 
                                     list.add(entity);
                                     numOfEntity += 1;
@@ -205,6 +209,7 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
                     entity.setDisQuantityRate(ServerError);
                     entity.setDisCount(ServerError);
                     entity.setDisCountRate(ServerError);
+                    entity.setDongName(dongName);
 
                     list.add(entity);
                     numOfEntity += 1;
@@ -232,6 +237,8 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
                 entity.setDisQuantityRate(csvBody.get(i)[10]);
                 entity.setDisCount(csvBody.get(i)[11]);
                 entity.setDisCountRate(csvBody.get(i)[12]);
+                entity.setDongName(dongName);
+
                 list.add(entity);
                 numOfEntity+=1;
 
