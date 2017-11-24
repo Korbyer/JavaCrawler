@@ -13,11 +13,11 @@ import lombok.Setter;
  */
 
 public class DTO {
-    private String cityCode,citySidoName,citySggName,aptCode,aptName,disYear,
-            disMonth,disDate,disDay,disQuantity,disQuantityRate,disCount,disCountRate,
-            cityNumber,regionNumber,dongNumber,cityName,regionName,dongName,
-            kaptCode,kaptName,kaptAddr,codeSaleNm,codeHeatNm,kaptTarea,kaptDongCnt,kaptdaCnt,kaptBcompany,kaptAcompany,
-            kapttel,kaptFax,kaptUrl,codeAptNm,doroJuso,hoCnt,codeMgrNm;
+    private String cityCode, citySidoName, citySggName, aptCode, aptName, disYear,
+            disMonth, disDate, disDay, disQuantity, disQuantityRate, disCount, disCountRate,
+            cityNumber, regionNumber, dongNumber, cityName, regionName, dongName,
+            kaptCode, kaptName, kaptAddr, codeSaleNm, codeHeatNm, kaptTarea, kaptDongCnt, kaptdaCnt, kaptBcompany, kaptAcompany,
+            kapttel, kaptFax, kaptUrl, codeAptNm, doroJuso, hoCnt, codeMgrNm, jibunAddr, siNm, sggNm, emdNm,totalCount;
 
     public String getCityCode() {
         return cityCode;
@@ -305,5 +305,45 @@ public class DTO {
 
     public void setCodeMgrNm(String codeMgrNm) {
         this.codeMgrNm = codeMgrNm;
+    }
+
+    public String getJibunAddr() {
+        return jibunAddr;
+    }
+
+    public void setJibunAddr(String jibunAddr) {
+        this.jibunAddr = jibunAddr;
+    }
+
+    public String getSiNm() {
+        return siNm;
+    }
+
+    public void setSiNm(String siNm) {
+        this.siNm = siNm;
+    }
+
+    public String getSggNm() {
+        return sggNm;
+    }
+
+    public void setSggNm(String sggNm) {
+        this.sggNm = sggNm;
+    }
+
+    public String getEmdNm() {
+        return emdNm;
+    }
+
+    public void setEmdNm(String emdNm) {
+        this.emdNm = emdNm;
+    }
+
+    public String getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(String totalCount) {
+        this.totalCount = totalCount;
     }
 }

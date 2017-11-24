@@ -36,7 +36,8 @@ public class Main {
         //new Xml_Parser_Food_Date(2016); /**반드시 수정, 성공*/
         //new Json_Parser_PreRegion(); /**동 목록 성공, 기상청 동주소(다름) 필요없음 현재는*/
         //new Xml_Parser_Fix_Food_Date(2016);/**CSV파일 재생성 성공*/
-        new Excel_Writer_PreRegion_Remake();
+        //new Excel_Writer_PreRegion_Remake();//성공, 법정동 xls파일 리메이크
+        new Xml_Parser_PreRegion_Dong_Apt();
 
 
 
