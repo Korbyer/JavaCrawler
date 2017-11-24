@@ -35,7 +35,7 @@ public class Xml_Parser_PreRegion_Dong_Apt implements Xml_Parser {
 
 
     public ArrayList<DTO> returnList() throws Exception {
-        FileInputStream fis = new FileInputStream("/Users/admin/IdeaProjects/JavaCrawler/data/Food_Region_Apt.xls");
+        FileInputStream fis = new FileInputStream("/Users/admin/IdeaProjects/JavaCrawler/data/Food_Region_Apt.xls");/**반드시 경로수정 요망 불로얼 엑셀파일Food_Region_Apt*/
         Workbook wbk = new HSSFWorkbook(fis);
         Sheet sheet = wbk.getSheetAt(0);
         int rowNum = sheet.getPhysicalNumberOfRows();
@@ -46,7 +46,13 @@ public class Xml_Parser_PreRegion_Dong_Apt implements Xml_Parser {
 
         for (int i = 1; i < rowNum; i++) {
             Row row = sheet.getRow(i);
-
+            /**전처리 경우의수
+             * 해당 아파트 이름을 곧이곧대로 입력하면 결과가 나오지않는 이상현상이 발생
+             * 이를 위해 전처리필요
+             * 예를 들면
+             * 1. 다세대 라는 단어가 들어간 아파트이름 중 다세대 이름을 빼면 결과가 정상적으로 나오는 경우
+             * 2. 다가구 라는 단어가 들어간 아파트이름들을 해당단어를 제외하고 다시입력하면 정상결과
+             * 3. 이외에 다양한 예외처리 추가바람*/
             checkAptName=row.getCell(3).getStringCellValue();
             /**해당 전처리 부분은 있어도되곡 없어도 되는부분입니다.
              * 바로 밑에 예외처리부분에서 이 모든것을 한번에 해결해줍니다.
@@ -82,6 +88,10 @@ public class Xml_Parser_PreRegion_Dong_Apt implements Xml_Parser {
 
                 }
 
+            }
+            else if(checkAptName.contains("해당없음")){
+                checkAptName.replaceAll("해당없음","");
+                url=new URL(getURLParam(row.getCell(2).getStringCellValue(),checkAptName));
             }
             else{/**가장 일반적인 주소입력 방식*/
                 System.out.println("일반주소 변환중...");

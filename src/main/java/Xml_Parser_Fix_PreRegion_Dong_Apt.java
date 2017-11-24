@@ -29,6 +29,7 @@ public class Xml_Parser_Fix_PreRegion_Dong_Apt extends Xml_Parser_PreRegion_Dong
         ArrayList<DTO> list = new ArrayList<DTO>();
         String checkAptName=null;
         String error="Error";
+        String subString=error.substring(1,4);
         URL url=null;
 
         for (int i = 1; i < rowNum; i++) {
@@ -36,7 +37,10 @@ public class Xml_Parser_Fix_PreRegion_Dong_Apt extends Xml_Parser_PreRegion_Dong
             if(row.createCell(4).getStringCellValue().equals(error)){
 
             }
+            else{
+
+            }
         }
-        return null;
+        return list;
     }
 }
