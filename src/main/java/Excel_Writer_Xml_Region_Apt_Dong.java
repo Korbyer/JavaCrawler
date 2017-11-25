@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Excel_Writer_Xml_Region_Apt_Dong {
 
-    public void Excel_Writer_Xml_Region_Apt(ArrayList<DTO> list){
+    public void Excel_Writer_Xml_Region_Apt_Dong(ArrayList<DTO> list){
         Workbook workbook=new HSSFWorkbook();
 
         Sheet sheet=workbook.createSheet("sheet1");

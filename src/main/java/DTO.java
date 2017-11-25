@@ -17,7 +17,7 @@ public class DTO {
             disMonth, disDate, disDay, disQuantity, disQuantityRate, disCount, disCountRate,
             cityNumber, regionNumber, dongNumber, cityName, regionName, dongName,
             kaptCode, kaptName, kaptAddr, codeSaleNm, codeHeatNm, kaptTarea, kaptDongCnt, kaptdaCnt, kaptBcompany, kaptAcompany,
-            kapttel, kaptFax, kaptUrl, codeAptNm, doroJuso, hoCnt, codeMgrNm, jibunAddr, siNm, sggNm, emdNm,totalCount;
+            kapttel, kaptFax, kaptUrl, codeAptNm, doroJuso, hoCnt, codeMgrNm, jibunAddr, siNm, sggNm, emdNm,totalCount,dateKind,dateName,isHoliday,locdate;
 
     public String getCityCode() {
         return cityCode;
@@ -345,5 +345,37 @@ public class DTO {
 
     public void setTotalCount(String totalCount) {
         this.totalCount = totalCount;
+    }
+
+    public String getDateKind() {
+        return dateKind;
+    }
+
+    public void setDateKind(String dateKind) {
+        this.dateKind = dateKind;
+    }
+
+    public String getDateName() {
+        return dateName;
+    }
+
+    public void setDateName(String dateName) {
+        this.dateName = dateName;
+    }
+
+    public String getIsHoliday() {
+        return isHoliday;
+    }
+
+    public void setIsHoliday(String isHoliday) {
+        this.isHoliday = isHoliday;
+    }
+
+    public String getLocdate() {
+        return locdate;
+    }
+
+    public void setLocdate(String locdate) {
+        this.locdate = locdate;
     }
 }

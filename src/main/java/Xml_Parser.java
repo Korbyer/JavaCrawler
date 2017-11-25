@@ -18,6 +18,11 @@ public interface Xml_Parser {
     public final static String JUSO_ROF="currentPage=1&countPerPage=1"; /**오직 한개의 결과만, 그 뒤의 주소들 누락 우려*/
     public final static String PHARAM_URL_REGION="http://apis.data.go.kr/1611000/AptListService/getLegaldongAptList?_wadl&_type=xml&loadCode=";
     public final static String PHARAM_URL_APT_INFO="http://apis.data.go.kr/1611000/AptBasisInfoService/getAphusBassInfo?kaptCode=";
+    public final static String PHARAM_URL_HOLIDAY="http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/";
+    public final static String METHOD_HOLIDAY_NATION="getHoliDeInfo?";
+    public final static String METHOD_HOLIDAY_PUBLIC="getRestDeInfo?";
+    public final static String ROF_HOL_YEAR="solYear=";
+    public final static String ROF_HOL_MONTH="&solMonth=";
     public final static String METHOD_GET_CITY="getCityList?ServiceKey="; /** 지자체목록 수집 method*/
     public final static String METHOD_GET_APT="getAptlist?ServiceKey="; /** 아파트목록 수집 method*/
     public final static String METHOD_GET_Food_Date="getCityAptDateList?ServiceKey="; /** 일일 아파트쓰레기목록 수집 method*/

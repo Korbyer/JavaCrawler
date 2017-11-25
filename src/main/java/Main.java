@@ -33,11 +33,12 @@ public class Main {
     public static void main(String[] args){
         //new Xml_Parser_Region();//지역코드파싱 성공 -1-
         //new Xml_Parser_Region_Apt();//아파트리스트파싱 성공 -2-
-        new Xml_Parser_Food_Date(2016); /**반드시 수정, 성공*//**-4-*/
+        //new Xml_Parser_Food_Date(2017); /**반드시 수정, 성공*//**-4-*/
         //new Json_Parser_PreRegion(); /**동 목록 성공, 기상청 동주소(다름) 필요없음 현재는*/
-        //new Xml_Parser_Fix_Food_Date(2016);/**CSV파일 재생성 성공*/
+        new Xml_Parser_Fix_Food_Date(2017);/**CSV파일 재생성 성공*/
         //new Excel_Writer_PreRegion_Remake();//성공, 법정동 xls파일 리메이크
         //new Xml_Parser_PreRegion_Dong_Apt();//법정동 수집 모두성공 -3-
+        //new Xml_Parser_Holiday(2016);//2016 모든 공휴일 파싱 성공
 
 
 

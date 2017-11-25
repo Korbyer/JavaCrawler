@@ -1,5 +1,9 @@
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -24,7 +28,12 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
         ArrayList<DTO> list=new ArrayList<DTO>();
 
 //        BufferedReader buffReader=new BufferedReader(new InputStreamReader(new FileInputStream(new File("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Date_"+String.valueOf(year)+"_errSample.csv")),"EUC-KR"));
-        CSVReader reader=new CSVReader(new BufferedReader(new InputStreamReader(new FileInputStream(new File("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Date_"+String.valueOf(year)+"_errSample.csv")),"EUC-KR")),',','"');
+        CSVReader reader=new CSVReader(new BufferedReader(new InputStreamReader(new FileInputStream(new File("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Date_"+String.valueOf(year)+".csv")),"EUC-KR")),',','"');
+
+        FileInputStream hol_fis=new FileInputStream("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Region_Holiday_"+year+".xls");
+        Workbook hol_wbk=new HSSFWorkbook(hol_fis);
+        Sheet hol_sheet=hol_wbk.getSheetAt(0);
+        int hol_rowNum=hol_sheet.getPhysicalNumberOfRows();
 
         List<String[]> csvBody=reader.readAll();
         String input="",errorCheck="",ServerError="ServerError",NoData="NoData";
@@ -34,7 +43,7 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
 
         String disYear = null, disMonth = null, disDate = null, disDay = null, disQuantity = null, disQuantityRate = null,
                 disCount = null, disCountRate = null, cityCode = null, citySidoName = null, citySggName = null,
-                aptCode = null, aptName = null, errMsg=null, returnAuthMsg=null, returnReasonCode=null, count=null,dongName=null;
+                aptCode = null, aptName = null, errMsg=null, returnAuthMsg=null, returnReasonCode=null, count=null,dongName=null,isHoliday=null,checkHoliday=null;
 //        for(input=buffReader.readLine();input!=null;i++){
         for(i=1;i<csvBody.size();i++){
             errorCheck = csvBody.get(i)[2];
@@ -119,6 +128,16 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
                             tag = xp.getName();
                             if (tag.equals("list")) {
                                 DTO entity = new DTO();
+                                isHoliday="0";
+                                Loop1: for(int a=1;a<hol_rowNum;a++) {
+                                    Row hol_row = hol_sheet.getRow(a);
+                                    checkHoliday = hol_row.getCell(3).getStringCellValue();
+                                    String remakeFormat = disYear + disMonth + disDate;
+                                    if(remakeFormat.equals(checkHoliday) || Integer.parseInt(disDay)==6 || Integer.parseInt(disDay)==7){
+                                        isHoliday="1";
+                                        break Loop1;
+                                    }
+                                }
                                 entity.setDisYear(disYear);
                                 entity.setDisMonth(disMonth);
                                 entity.setDisDate(disDate);
@@ -133,6 +152,7 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
                                 entity.setDisCount(disCount);
                                 entity.setDisCountRate(disCountRate);
                                 entity.setDongName(dongName);
+                                entity.setIsHoliday(isHoliday);
 
                                 list.add(entity);
                                 numOfEntity+=1;
@@ -156,6 +176,7 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
                                 entity.setDisCount(ServerError);
                                 entity.setDisCountRate(ServerError);
                                 entity.setDongName(dongName);
+                                entity.setIsHoliday(ServerError);
 
                                 list.add(entity);
                                 numOfEntity += 1;
@@ -180,6 +201,7 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
                                     entity.setDisCount("0");
                                     entity.setDisCountRate("0");
                                     entity.setDongName(dongName);
+                                    entity.setIsHoliday(NoData);
 
                                     list.add(entity);
                                     numOfEntity += 1;
@@ -210,6 +232,7 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
                     entity.setDisCount(ServerError);
                     entity.setDisCountRate(ServerError);
                     entity.setDongName(dongName);
+                    entity.setIsHoliday(ServerError);
 
                     list.add(entity);
                     numOfEntity += 1;
@@ -238,6 +261,7 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
                 entity.setDisCount(csvBody.get(i)[11]);
                 entity.setDisCountRate(csvBody.get(i)[12]);
                 entity.setDongName(dongName);
+                entity.setIsHoliday(csvBody.get(i)[14]);
 
                 list.add(entity);
                 numOfEntity+=1;

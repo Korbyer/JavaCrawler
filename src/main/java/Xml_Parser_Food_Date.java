@@ -8,7 +8,10 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by admin on 2017. 10. 18..
@@ -46,13 +49,22 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
 
     public ArrayList<DTO> returnList(int year) throws Exception{
         FileInputStream fis=new FileInputStream("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Region_Apt_Dong.xls");/** Food_Region_Apt 엑셀파일 저장위치 불러오기 */
+        FileInputStream hol_fis=new FileInputStream("C:\\Users\\admin\\IdeaProjects\\JavaCrawler\\data\\Food_Region_Holiday_"+year+".xls");
+
         Workbook wbk=new HSSFWorkbook(fis);
+        Workbook hol_wbk=new HSSFWorkbook(hol_fis);
+
         Sheet sheet = wbk.getSheetAt(0);
+        Sheet hol_sheet=hol_wbk.getSheetAt(0);
+
         int rowNum=sheet.getPhysicalNumberOfRows();
+        int hol_rowNum=hol_sheet.getPhysicalNumberOfRows();
+
         ArrayList<DTO> list=new ArrayList<DTO>();
         String disYear = null, disMonth = null, disDate = null, disDay = null, disQuantity = null, disQuantityRate = null,
                 disCount = null, disCountRate = null, cityCode = null, citySidoName = null, citySggName = null,
-                aptCode = null, aptName = null, errMsg=null, returnAuthMsg=null, returnReasonCode=null, count=null,dongName=null;
+                aptCode = null, aptName = null, errMsg=null, returnAuthMsg=null, returnReasonCode=null, count=null,dongName=null,dateKind=null,dateName=null,isHoliday="0",locdate=null,
+                checkHoliday=null,remakeDate=null,remakeMonth=null,checkDisDay=null;
 
         int numOfEntity=0;
         int sheetNum=0;
@@ -63,35 +75,35 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
         int TIME_OUT_VALUE=5000;
 
 
-
-
-
         for(int i=1;i<rowNum;i++) {//rowNum
             Row row = sheet.getRow(i);
             for (int j = 1; j < 13; j++) {//
                 try
                 {
-
-
                     url = new URL(getURLParam(row.getCell(0).getStringCellValue(), row.getCell(1).getStringCellValue(), String.valueOf(year), String.valueOf(j)));
+
+
                     conn = (HttpURLConnection) url.openConnection();
                     conn.setConnectTimeout(TIME_OUT_VALUE);
                     conn.setReadTimeout(TIME_OUT_VALUE);
                     conn.setRequestMethod("GET");
                     conn.setRequestProperty("Content-type", "application/json");
-
                     XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
                     factory.setNamespaceAware(true);
                     XmlPullParser xp = factory.newPullParser();
-
                     BufferedInputStream bf = new BufferedInputStream(url.openStream());
                     xp.setInput(bf, "utf-8");
+
+
 
                     String tag = null;
                     int eventType = xp.getEventType();
 
 
+
                  /*각 기능마다 태그들을 달리 설정*/
+
+
 
 
                     while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -158,7 +170,33 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
                             tag = xp.getName();
                             if (tag.equals("list")) {
                                 DTO entity = new DTO();
+                                isHoliday="0";
+                                Loop1: for(int a=1;a<hol_rowNum;a++){
+                                    Row hol_row=hol_sheet.getRow(a);
+                                    checkHoliday=hol_row.getCell(3).getStringCellValue();
+                                    String remakeFormat=disYear+disMonth+disDate;
+//                                    if(Integer.parseInt(disDate)<10){
+//                                        remakeDate="0"+disDate;
+//                                    }
+//                                    else if(Integer.parseInt(disDate)>=10){
+//                                        remakeDate=disDate;
+//                                    }
+//
+//                                    if(Integer.parseInt(disMonth)<10){
+//                                        remakeMonth="0"+disMonth;
+//                                    }
+//                                    else if(Integer.parseInt(disMonth)>=10){
+//                                        remakeMonth=disMonth;
+//                                    }
 
+                                    if(remakeFormat.equals(checkHoliday) || Integer.parseInt(disDay)==6 || Integer.parseInt(disDay)==7){
+                                        isHoliday="1";
+                                        break Loop1;
+                                    }
+
+
+
+                                }
                                 entity.setDisYear(disYear);
                                 entity.setDisMonth(disMonth);
                                 entity.setDisDate(disDate);
@@ -173,9 +211,12 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
                                 entity.setDisCount(disCount);
                                 entity.setDisCountRate(disCountRate);
                                 entity.setDongName(row.getCell(4).getStringCellValue());
+                                entity.setIsHoliday(isHoliday);
 
                                 list.add(entity);
                                 numOfEntity+=1;
+
+
 
 
                             }
@@ -196,6 +237,7 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
                                 entity.setDisCount(ServerError);
                                 entity.setDisCountRate(ServerError);
                                 entity.setDongName(row.getCell(4).getStringCellValue());
+                                entity.setIsHoliday(ServerError);
 
                                 list.add(entity);
                                 numOfEntity += 1;
@@ -205,27 +247,90 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
 
                                 if(Integer.parseInt(count)==0) {
                                     DTO entity = new DTO();
+//                                    Calendar c=Calendar.getInstance();
+//                                    c.set(Integer.parseInt(String.valueOf(year)),j,1);
+//                                    int max=c.getActualMaximum(Calendar.DAY_OF_MONTH);
+//                                    for(int x=1;x<max;x++){
+//                                        if (x < 10) {
+//                                            remakeDate = "0" + String.valueOf(x);
+//                                        } else if (j < 10) {
+//                                            remakeMonth = "0" + String.valueOf(j);
+//                                        } else if (x >= 10) {
+//                                            remakeDate = String.valueOf(x);
+//                                        } else if (j >= 10) {
+//                                            remakeMonth = String.valueOf(j);
+//                                        }
+//                                        String dateType=String.valueOf(year)+"-"+remakeMonth+"-"+remakeDate;
+//                                        SimpleDateFormat dateFormat=new SimpleDateFormat(dateType);
+//                                        Date nDate=dateFormat.parse(String.valueOf(remakeDate));
+//                                        c.setTime(nDate);
+//                                        int dayNum=c.get(Calendar.DAY_OF_WEEK);
+//                                        checkDisDay="";
+//
+//                                        switch (dayNum){
+//                                            case 1:
+//                                                checkDisDay="1";
+//                                                break;
+//                                            case 2:
+//                                                checkDisDay="2";
+//                                                break;
+//                                            case 3:
+//                                                checkDisDay="3";
+//                                                break;
+//                                            case 4:
+//                                                checkDisDay="4";
+//                                                break;
+//                                            case 5:
+//                                                checkDisDay="5";
+//                                                break;
+//                                            case 6:
+//                                                checkDisDay="6";
+//                                                break;
+//                                            case 7:
+//                                                checkDisDay="7";
+//                                                break;
+//                                        }
+//
+//                                        for(int a=1;a<hol_rowNum;a++) {
+//                                            Row hol_row = hol_sheet.getRow(a);
+//                                            checkHoliday = hol_row.getCell(3).getStringCellValue();
+//
+//                                            if ((String.valueOf(year) + remakeMonth + remakeDate).equals(checkHoliday)) {
+//                                                isHoliday = "1";
+//                                            }
+//                                            else if (!checkHoliday.equals(String.valueOf(year) + remakeMonth + remakeDate)) {
+//                                                isHoliday = "0";
+//                                            }
+//                                            else if(checkDisDay.equals("6") || checkDisDay.equals("7")){
+//                                                isHoliday="1";
+//                                            }
+//
+//                                        }
+                                        entity.setDisYear(String.valueOf(year));
+                                        entity.setDisMonth(String.valueOf(j));
+                                        entity.setDisDate(String.valueOf(NoData));
+                                        entity.setDisDay(NoData);
+                                        entity.setCityCode(row.getCell(0).getStringCellValue());
+                                        entity.setCitySidoName(NoData);
+                                        entity.setCitySggName(row.getCell(2).getStringCellValue());
+                                        entity.setAptCode(row.getCell(1).getStringCellValue());
+                                        entity.setAptName(row.getCell(3).getStringCellValue());
+                                        entity.setDisQuantity("0");
+                                        entity.setDisQuantityRate("0");
+                                        entity.setDisCount("0");
+                                        entity.setDisCountRate("0");
+                                        entity.setDongName(row.getCell(4).getStringCellValue());
+                                        entity.setIsHoliday(NoData);
 
-                                    entity.setDisYear(String.valueOf(year));
-                                    entity.setDisMonth(String.valueOf(j));
-                                    entity.setDisDate(NoData);
-                                    entity.setDisDay(NoData);
-                                    entity.setCityCode(row.getCell(0).getStringCellValue());
-                                    entity.setCitySidoName(NoData);
-                                    entity.setCitySggName(row.getCell(2).getStringCellValue());
-                                    entity.setAptCode(row.getCell(1).getStringCellValue());
-                                    entity.setAptName(row.getCell(3).getStringCellValue());
-                                    entity.setDisQuantity("0");
-                                    entity.setDisQuantityRate("0");
-                                    entity.setDisCount("0");
-                                    entity.setDisCountRate("0");
-                                    entity.setDongName(row.getCell(4).getStringCellValue());
+                                        list.add(entity);
+                                        numOfEntity += 1;
 
-                                    list.add(entity);
-                                    numOfEntity += 1;
+                                    }
+
+
                                 }
                             }
-                        }
+
                         eventType = xp.next();
                     }
 
@@ -250,6 +355,7 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
                     entity.setDisCount(ServerError);
                     entity.setDisCountRate(ServerError);
                     entity.setDongName(row.getCell(4).getStringCellValue());
+                    entity.setIsHoliday(ServerError);
 
                     list.add(entity);
                     numOfEntity += 1;
@@ -280,6 +386,7 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
         return url;
     }
 
+
     public void printList(ArrayList<DTO> list) {
 
     }
@@ -291,6 +398,8 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
     public String getURLParam(String data){
         return null;
     }
+
+
 
     public int returnRowNum(){
         return 0;

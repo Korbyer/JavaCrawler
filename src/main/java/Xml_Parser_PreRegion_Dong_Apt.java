@@ -23,7 +23,7 @@ public class Xml_Parser_PreRegion_Dong_Apt implements Xml_Parser {
         }
     }
     public void apiParserSearch() throws Exception {
-        new Excel_Writer_Xml_Region_Apt_Dong().Excel_Writer_Xml_Region_Apt(returnList());
+        new Excel_Writer_Xml_Region_Apt_Dong().Excel_Writer_Xml_Region_Apt_Dong(returnList());
     }
 
     public String getURLParam(String region,String aptName) throws Exception{
