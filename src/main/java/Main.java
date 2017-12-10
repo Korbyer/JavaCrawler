@@ -49,11 +49,12 @@
          *
          * 감사합니다!
          *    [데이터수집모듈]
-         *    Food_Date_Alpha_v0.01
-         *    2017.11.25
+         *    Food_Date_Alpha_v0.02
+         *    2017.11.25  -  v0.01
+         *    2017.12.09  -  v0.02 : aptName 부분에서 ' , '  포함된 단어들 다른 단어로 대체(sql 문법수정중, csv 포맷 인식 과정에서 문제발생)
          *    박효열
          *    hypark5540@naver.com
-         *    
+         *
          *    https://github.com/Korbyer/JavaCrawler
          *
          *       */

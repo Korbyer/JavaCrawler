@@ -43,7 +43,7 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
 
         String disYear = null, disMonth = null, disDate = null, disDay = null, disQuantity = null, disQuantityRate = null,
                 disCount = null, disCountRate = null, cityCode = null, citySidoName = null, citySggName = null,
-                aptCode = null, aptName = null, errMsg=null, returnAuthMsg=null, returnReasonCode=null, count=null,dongName=null,isHoliday=null,checkHoliday=null;
+                aptCode = null, aptName = null, errMsg=null, returnAuthMsg=null, returnReasonCode=null, count=null,dongName=null,isHoliday=null,checkHoliday=null,dumi=null;
 //        for(input=buffReader.readLine();input!=null;i++){
         for(i=1;i<csvBody.size();i++){
             errorCheck = csvBody.get(i)[2];
@@ -98,7 +98,9 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
                                 aptCode=xp.getText();
                             }
                             else if (tag.equals("aptName")) {
-                                aptName=xp.getText();
+                                dumi=xp.getText();
+                                aptName=dumi.replace(',','.');
+
                             }
                             else if (tag.equals("disQuantity")) {
                                 disQuantity=xp.getText();
@@ -170,7 +172,7 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
                                 entity.setCitySidoName(ServerError);
                                 entity.setCitySggName(csvBody.get(i)[6]);
                                 entity.setAptCode(csvBody.get(i)[7]);
-                                entity.setAptName(csvBody.get(i)[8]);
+                                entity.setAptName(csvBody.get(i)[8].replace(',','.'));
                                 entity.setDisQuantity(ServerError);
                                 entity.setDisQuantityRate(ServerError);
                                 entity.setDisCount(ServerError);
@@ -195,7 +197,7 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
                                     entity.setCitySidoName(NoData);
                                     entity.setCitySggName(csvBody.get(i)[6]);
                                     entity.setAptCode(csvBody.get(i)[7]);
-                                    entity.setAptName(csvBody.get(i)[8]);
+                                    entity.setAptName(csvBody.get(i)[8].replace(',','.'));
                                     entity.setDisQuantity("0");
                                     entity.setDisQuantityRate("0");
                                     entity.setDisCount("0");
@@ -226,7 +228,7 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
                     entity.setCitySidoName(ServerError);
                     entity.setCitySggName(csvBody.get(i)[6]);
                     entity.setAptCode(csvBody.get(i)[7]);
-                    entity.setAptName(csvBody.get(i)[8]);
+                    entity.setAptName(csvBody.get(i)[8].replace(',','.'));
                     entity.setDisQuantity(ServerError);
                     entity.setDisQuantityRate(ServerError);
                     entity.setDisCount(ServerError);
@@ -255,7 +257,7 @@ public class Xml_Parser_Fix_Food_Date implements Xml_Parser {
                 entity.setCitySidoName(csvBody.get(i)[5]);
                 entity.setCitySggName(csvBody.get(i)[6]);
                 entity.setAptCode(csvBody.get(i)[7]);
-                entity.setAptName(csvBody.get(i)[8]);
+                entity.setAptName(csvBody.get(i)[8].replace(',','.'));
                 entity.setDisQuantity(csvBody.get(i)[9]);
                 entity.setDisQuantityRate(csvBody.get(i)[10]);
                 entity.setDisCount(csvBody.get(i)[11]);

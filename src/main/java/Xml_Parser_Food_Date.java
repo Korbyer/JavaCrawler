@@ -64,7 +64,7 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
         String disYear = null, disMonth = null, disDate = null, disDay = null, disQuantity = null, disQuantityRate = null,
                 disCount = null, disCountRate = null, cityCode = null, citySidoName = null, citySggName = null,
                 aptCode = null, aptName = null, errMsg=null, returnAuthMsg=null, returnReasonCode=null, count=null,dongName=null,dateKind=null,dateName=null,isHoliday="0",locdate=null,
-                checkHoliday=null,remakeDate=null,remakeMonth=null,checkDisDay=null;
+                checkHoliday=null,remakeDate=null,remakeMonth=null,checkDisDay=null,dumi=null;
 
         int numOfEntity=0;
         int sheetNum=0;
@@ -137,7 +137,9 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
                                 aptCode=xp.getText();
                             }
                             else if (tag.equals("aptName")) {
-                                aptName=xp.getText();
+                                dumi=xp.getText();
+                                aptName=dumi.replace(',','.');
+
                             }
                             else if (tag.equals("disQuantity")) {
                                 disQuantity=xp.getText();
@@ -231,7 +233,7 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
                                 entity.setCitySidoName(ServerError);
                                 entity.setCitySggName(row.getCell(2).getStringCellValue());
                                 entity.setAptCode(row.getCell(1).getStringCellValue());
-                                entity.setAptName(row.getCell(3).getStringCellValue());
+                                entity.setAptName(row.getCell(3).getStringCellValue().replace(',','.'));
                                 entity.setDisQuantity(ServerError);
                                 entity.setDisQuantityRate(ServerError);
                                 entity.setDisCount(ServerError);
@@ -314,7 +316,7 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
                                         entity.setCitySidoName(NoData);
                                         entity.setCitySggName(row.getCell(2).getStringCellValue());
                                         entity.setAptCode(row.getCell(1).getStringCellValue());
-                                        entity.setAptName(row.getCell(3).getStringCellValue());
+                                        entity.setAptName(row.getCell(3).getStringCellValue().replace(',','.'));
                                         entity.setDisQuantity("0");
                                         entity.setDisQuantityRate("0");
                                         entity.setDisCount("0");
@@ -349,7 +351,7 @@ public class Xml_Parser_Food_Date implements Xml_Parser{
                     entity.setCitySidoName(ServerError);
                     entity.setCitySggName(row.getCell(2).getStringCellValue());
                     entity.setAptCode(row.getCell(1).getStringCellValue());
-                    entity.setAptName(row.getCell(3).getStringCellValue());
+                    entity.setAptName(row.getCell(3).getStringCellValue().replace(',','.'));
                     entity.setDisQuantity(ServerError);
                     entity.setDisQuantityRate(ServerError);
                     entity.setDisCount(ServerError);
